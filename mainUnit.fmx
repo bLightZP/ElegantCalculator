@@ -1,0 +1,53 @@
+object MainForm: TMainForm
+  Left = 0
+  Top = 0
+  BorderStyle = None
+  ClientHeight = 827
+  ClientWidth = 973
+  Fill.Color = claBlack
+  Fill.Kind = Solid
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
+  OnResize = FormResize
+  DesignerMasterStyle = 0
+  object mathLineBG: TRectangle
+    Fill.Kind = Gradient
+    Fill.Gradient.Points = <
+      item
+        Color = xFF081820
+        Offset = 0.000000000000000000
+      end
+      item
+        Color = xFF183060
+        Offset = 0.804347813129425000
+      end
+      item
+        Color = xFF102028
+        Offset = 1.000000000000000000
+      end>
+    Fill.Gradient.StartPosition.X = 0.500000000000000000
+    Fill.Gradient.StartPosition.Y = 1.000000000000000000
+    Fill.Gradient.StopPosition.X = 0.499999970197677600
+    Fill.Gradient.StopPosition.Y = 0.000000000000000000
+    Position.Y = -8.000000000000000000
+    Size.Width = 640.000000000000000000
+    Size.Height = 135.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+  end
+  object mathLineLabel: TLabel
+    StyledSettings = [Family, Style]
+    Position.Y = -2.000000000000000000
+    Size.Width = 640.000000000000000000
+    Size.Height = 113.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.FontColor = claWhite
+    TextSettings.HorzAlign = Center
+    TextSettings.WordWrap = False
+    TextSettings.Trimming = None
+    TabOrder = 0
+  end
+end
