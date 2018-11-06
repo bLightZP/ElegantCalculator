@@ -7,3 +7,5 @@ I wrote a basic string math formula parser since I couldn't find anything free t
 
 You can download Elegant Calculator from the google play store:    
 https://play.google.com/store/apps/details?id=com.inmatrix.ElegantCalculator
+
+Released under the MPL2 license.
