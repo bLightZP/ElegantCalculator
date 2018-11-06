@@ -5,5 +5,5 @@ This sample demonstrates basic scalable Android UI, taking screen scale into acc
 
 I wrote a basic string math formula parser since I couldn't find anything free that would compile for Android.
 
-You can download Elegant Claculator from the google play store:    
+You can download Elegant Calculator from the google play store:    
 https://play.google.com/store/apps/details?id=com.inmatrix.ElegantCalculator
