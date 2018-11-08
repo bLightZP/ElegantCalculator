@@ -105,7 +105,7 @@ const
      (keyFunction : func1        ; keyText : '1';              keyColumn : 0;  keyRow : 3;  KeyShade : keyShade1),
      (keyFunction : func2        ; keyText : '2';              keyColumn : 1;  keyRow : 3;  KeyShade : keyShade1),
      (keyFunction : func3        ; keyText : '3';              keyColumn : 2;  keyRow : 3;  KeyShade : keyShade1),
-     (keyFunction : funcDot      ; keyText : '.';              keyColumn : 3;  keyRow : 3;  KeyShade : keyShade2),
+     (keyFunction : funcDot      ; keyText : '';               keyColumn : 3;  keyRow : 3;  KeyShade : keyShade2),
 
      (keyFunction : funcMemory   ; keyText : 'M';              keyColumn : 0;  keyRow : 4;  KeyShade : keyShade3),
      (keyFunction : func0        ; keyText : '0';              keyColumn : 1;  keyRow : 4;  KeyShade : keyShade1),
@@ -244,6 +244,7 @@ const
   keyTextHeight      : Single  = 0.40;
 
 var
+  sKey               : String;
   I                  : Integer;
   fullKeyboardHeight : Integer;
   fullKeyboardWidth  : Integer;
@@ -391,6 +392,11 @@ begin
 
     aRect := TRectF.Create(0,0,calcKeyImages[I].Width,calcKeyImages[I].Height);
 
+
+    If calcKeyMap[I].keyFunction = funcDot then
+      sKey := FormatSettings.DecimalSeparator else
+      sKey := calcKeyMap[I].KeyText;
+
     calcKeyImages[I].Bitmap.Canvas.BeginScene;
     calcKeyImages[I].Bitmap.Canvas.Fill.Color  := $FF000000;
     calcKeyImages[I].Bitmap.Canvas.Stroke.Kind := TBrushKind.Solid;
@@ -398,7 +404,7 @@ begin
     //calcKeyImages[I].Bitmap.Canvas.Font.Family := 'Tahoma';
     calcKeyImages[I].Bitmap.Canvas.FillText(
       aRect,
-      calcKeyMap[I].KeyText,
+      sKey,
       False,
       0.6,
       [],
@@ -430,6 +436,7 @@ begin
       Begin
         clientResultShown  := False;
         mathLineLabel.Text := '';
+        clientDotEnabled   := False;
       End;
       else clientResultShown  := False;
     End;
@@ -445,7 +452,7 @@ begin
     begin
       If mathLineLabel.Text <> '' then If mathLineLabel.Text[High(mathLineLabel.Text)].IsInArray([divisionSymbol,multiplySymbol,'+','-']) = False then
       Begin
-        If mathLineLabel.Text[High(mathLineLabel.Text)] = '.' then mathLineLabel.Text := mathLineLabel.Text+'0';
+        If mathLineLabel.Text[High(mathLineLabel.Text)] = FormatSettings.DecimalSeparator then mathLineLabel.Text := mathLineLabel.Text+'0';
         mathLineLabel.Text := mathLineLabel.Text+'+';
         clientDotEnabled   := False;
       End;
@@ -454,7 +461,7 @@ begin
     Begin
       If mathLineLabel.Text <> '' then If mathLineLabel.Text[High(mathLineLabel.Text)].IsInArray([divisionSymbol,multiplySymbol,'+','-']) = False then
       Begin
-        If mathLineLabel.Text[High(mathLineLabel.Text)] = '.' then mathLineLabel.Text := mathLineLabel.Text+'0';
+        If mathLineLabel.Text[High(mathLineLabel.Text)] = FormatSettings.DecimalSeparator then mathLineLabel.Text := mathLineLabel.Text+'0';
         mathLineLabel.Text := mathLineLabel.Text+'-';
         clientDotEnabled   := False;
       End;
@@ -463,7 +470,7 @@ begin
     Begin
       If mathLineLabel.Text <> '' then If mathLineLabel.Text[High(mathLineLabel.Text)].IsInArray([divisionSymbol,multiplySymbol,'+','-']) = False then
       Begin
-        If mathLineLabel.Text[High(mathLineLabel.Text)] = '.' then mathLineLabel.Text := mathLineLabel.Text+'0';
+        If mathLineLabel.Text[High(mathLineLabel.Text)] = FormatSettings.DecimalSeparator then mathLineLabel.Text := mathLineLabel.Text+'0';
         mathLineLabel.Text := mathLineLabel.Text+divisionSymbol;
         clientDotEnabled   := False;
       End;
@@ -472,7 +479,7 @@ begin
     Begin
       If mathLineLabel.Text <> '' then If mathLineLabel.Text[High(mathLineLabel.Text)].IsInArray([divisionSymbol,multiplySymbol,'+','-']) = False then
       Begin
-        If mathLineLabel.Text[High(mathLineLabel.Text)] = '.' then mathLineLabel.Text := mathLineLabel.Text+'0';
+        If mathLineLabel.Text[High(mathLineLabel.Text)] = FormatSettings.DecimalSeparator then mathLineLabel.Text := mathLineLabel.Text+'0';
         mathLineLabel.Text := mathLineLabel.Text+multiplySymbol;
         clientDotEnabled   := False;
       End;
@@ -481,8 +488,9 @@ begin
     Begin
       If mathLineLabel.Text <> '' then
       Begin
+        If mathLineLabel.Text[High(mathLineLabel.Text)] = FormatSettings.DecimalSeparator then clientDotEnabled := False
+          else
         Case mathLineLabel.Text[High(mathLineLabel.Text)] of
-          '.'            : clientDotEnabled := False;
           '+',
           '-',
           divisionSymbol,
@@ -490,12 +498,13 @@ begin
           Begin
             For I := High(mathLineLabel.Text)-1 downto Low(mathLineLabel.Text) do
             Begin
+              If mathLineLabel.Text[I] = FormatSettings.DecimalSeparator then
+              Begin
+                clientDotEnabled := True;
+                Break;
+              End
+                else
               Case mathLineLabel.Text[I] of
-                '.'            :
-                Begin
-                  clientDotEnabled := True;
-                  Break;
-                End;
                 '+',
                 '-',
                 divisionSymbol,
@@ -525,13 +534,13 @@ begin
     Begin
       If mathLineLabel.Text = '' then
       Begin
-        mathLineLabel.Text := '0.';
+        mathLineLabel.Text := '0'+FormatSettings.DecimalSeparator;
         clientDotEnabled   := True;
       End
         else
-      If (clientDotEnabled = False) and (mathLineLabel.Text[High(mathLineLabel.Text)].IsInArray([divisionSymbol,multiplySymbol,'+','-','.']) = False) then
+      If (clientDotEnabled = False) and (mathLineLabel.Text[High(mathLineLabel.Text)].IsInArray([divisionSymbol,multiplySymbol,'+','-',FormatSettings.DecimalSeparator]) = False) then
       Begin
-        mathLineLabel.Text := mathLineLabel.Text+'.';
+        mathLineLabel.Text := mathLineLabel.Text+FormatSettings.DecimalSeparator;
         clientDotEnabled   := True;
       End;
     End;
@@ -548,7 +557,10 @@ begin
       Begin
         //If CharInSet(mathLineLabel.Text[High(mathLineLabel.Text)],[divisionSymbol,multiplySymbol,'+','-']) = True then
         If mathLineLabel.Text[High(mathLineLabel.Text)].IsInArray([divisionSymbol,multiplySymbol,'+','-']) = True then
+        Begin
           mathLineLabel.Text := mathLineLabel.Text+clientMemoryValue;
+          If Pos(FormatSettings.DecimalSeparator,clientMemoryValue) > 0 then clientDotEnabled := True;
+        End;
       End
       Else mathLineLabel.Text := clientMemoryValue;
     End;
@@ -617,6 +629,8 @@ end;
 procedure TMainForm.OutputMathResult;
 begin
   mathLineLabel.Text    := ParseMathForumla(mathLineLabel.Text);
+  If Pos(FormatSettings.DecimalSeparator,mathLineLabel.Text) > 0 then clientDotEnabled := True;
+
 
   clientResultShown     := True;
 end;
